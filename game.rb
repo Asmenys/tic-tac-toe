@@ -36,13 +36,16 @@ class CREATE_BOARD
         puts "| #{@board[2][0]} | #{@board[2][1]} | #{@board[2][2]} |"
     
     end
+    def get_index(num)
+        temp_index = @board.map {|arr| arr.include?(num)}
+        temp_index = temp_index.index(true)
+        temp_index = [temp_index, @board[temp_index].index(num)]
+        return temp_index
+    end
 
 end
 game_board = CREATE_BOARD.new
 game_board.display_board
 
-while true
-  return  gets.chomp
-end
-#binding.pry
-#p "something"
+binding.pry
+p "something"
