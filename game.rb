@@ -1,4 +1,4 @@
-require 'pry-byebug'
+
 #TIC-TAC-TOE
 #A class that initializes the players
 class CREATE_PLAYER
