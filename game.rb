@@ -30,12 +30,12 @@ class CREATE_BOARD
         temp_index=0
         @board = Array.new(3) {Array.new(3){temp_index+=1}}
     end
-private
+public
     def display_board
         puts "| #{@board[0][0]} | #{@board[0][1]} | #{@board[0][2]} |"   
-        puts "+-----------+"
+        puts "+---+---+---+"
         puts "| #{@board[1][0]} | #{@board[1][1]} | #{@board[1][2]} |"
-        puts "+-----------+"
+        puts "+---+---+---+"
         puts "| #{@board[2][0]} | #{@board[2][1]} | #{@board[2][2]} |"
     
     end
@@ -64,6 +64,30 @@ public
             display_board()
         else puts "Please choose a square that is not yet taken"
         end
+    end
+public
+    def check_rows_horizontal(board = @board)
+        result=""
+        board.each do |horizontal_row|
+            temp_element = horizontal_row.sample
+            result = horizontal_row.all? {|element| element == temp_element}
+        end
+        return result
+    end
+public
+    def vertical_to_horizontal
+        vertical_horizontal_rows = Array.new(3){Array.new()}
+        @board.each_index do |index|
+            vertical_horizontal_rows[index] << @board[0][index]
+            vertical_horizontal_rows[index] << @board[1][index]
+            vertical_horizontal_rows[index] << @board[2][index]
+        end
+        return vertical_horizontal_rows
+    end
+public
+
+    def check_rows_vertical
+        check_rows_horizontal(vertical_to_horizontal())
     end
 end
 
