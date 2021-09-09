@@ -22,7 +22,9 @@ first_player.assign_symbol("Y")
 second_player = CREATE_PLAYER.new("P2")
 #puts "Choose a player_symbol to represent you on the board"
 second_player.assign_symbol("X")
+
 class CREATE_BOARD
+    attr_accessor :board
     def initialize
         temp_index=0
         @board = Array.new(3) {Array.new(3){temp_index+=1}}
@@ -36,11 +38,29 @@ class CREATE_BOARD
         puts "| #{@board[2][0]} | #{@board[2][1]} | #{@board[2][2]} |"
     
     end
+  private
     def get_index(num)
         temp_index = @board.map {|arr| arr.include?(num)}
         temp_index = temp_index.index(true)
         temp_index = [temp_index, @board[temp_index].index(num)]
+        #[TopArrayIndex,NestedArrayIndex]
         return temp_index
+    end
+
+    private
+    def check_square(num)
+        temp_index = @board.map {|arr| arr.include?(num)}
+        return temp_index.any?(true)
+    end
+
+public
+    def update_square(player_selection,num)
+unless check_square(num) == false
+        temp_index = get_index(num)
+@board[temp_index[0]][temp_index[1]] = player_selection
+display_board()
+else puts "Please choose a square that is not yet taken"
+end
     end
 
 end
