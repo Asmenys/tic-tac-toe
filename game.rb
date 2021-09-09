@@ -13,28 +13,21 @@ class CREATE_PLAYER
         @player_symbol = player_symbol
     end
 end
-#somehow create the objects, then call assign_symbol on them
-#puts "Enter the name for player 1"
-    first_player = CREATE_PLAYER.new("P1")
-#puts "Choose a player_symbol to represent you on the board"
-    first_player.assign_symbol("Y")
-#puts "Enter the name for player 2"
-    second_player = CREATE_PLAYER.new("P2")
-#puts "Choose a player_symbol to represent you on the board"
-    second_player.assign_symbol("X")
 
 class CREATE_BOARD
-    def initialize
+    def initialize ()
         temp_index=0
         @board = Array.new(3) {Array.new(3){temp_index+=1}}
     end
 public
     def display_board
+        puts "-------------"
         puts "| #{@board[0][0]} | #{@board[0][1]} | #{@board[0][2]} |"   
         puts "+---+---+---+"
         puts "| #{@board[1][0]} | #{@board[1][1]} | #{@board[1][2]} |"
         puts "+---+---+---+"
         puts "| #{@board[2][0]} | #{@board[2][1]} | #{@board[2][2]} |"
+        puts "-------------"
     end
 private
     def get_index(num)
@@ -50,14 +43,14 @@ private
         return temp_index.any?(true)
     end
 private
-    def update_square(player_selection,temp_index)
-        @board[temp_index[0]][temp_index[1]] = player_selection
+    def update_square(player_symbol,temp_index)
+        @board[temp_index[0]][temp_index[1]] = player_symbol
     end
 public
-    def commit_move(player_selection,num)
+    def commit_move(player_symbol,num)
         unless check_square(num) == false
             temp_index = get_index(num)
-            update_square(player_selection,temp_index)
+            update_square(player_symbol,temp_index)
             display_board()
         else puts "Please choose a square that is not yet taken"
         end
@@ -125,10 +118,42 @@ public
         end
     end
 end
+    puts "Enter the name for player 1"
+player_one = CREATE_PLAYER.new(gets.chomp)
+    puts "Choose a player_symbol to represent you on the board"
+player_one.assign_symbol(gets.chomp)
+    puts "Enter the name for player 2"
+player_two = CREATE_PLAYER.new(gets.chomp)
+    puts "Choose a player_symbol to represent you on the board"
+player_two.assign_symbol(gets.chomp)
+game_board = CREATE_BOARD.new()
+#binding.pry
+
+turns = 0
+while turns<=9
+    game_board.display_board
+    puts "#{player_one.player_name}'s move"
+    game_board.commit_move(player_one.player_symbol, gets.chomp.to_i)  
+     if (game_board.check_for_win == true)
+        system "clear"
+        game_board.display_board
+        puts "#{player_one.player_name} has WON!"
+        break
+     end
+    system "clear"
+   game_board.display_board
+    puts "#{player_two.player_name}'s move"
+    game_board.commit_move(player_two.player_symbol, gets.chomp.to_i)  
+    if (game_board.check_for_win == true)
+        system "clear"
+        game_board.display_board
+        puts "#{player_two.player_name} has WON!"
+        break
+     end
+    system "clear"
+    game_board.display_board
+    turns+=1
+end
 
 
-game_board = CREATE_BOARD.new
-game_board.display_board
 
-binding.pry
-p "something"
