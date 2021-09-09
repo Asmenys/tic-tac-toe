@@ -24,8 +24,6 @@ end
     second_player.assign_symbol("X")
 
 class CREATE_BOARD
-    #remove after testing is over
-    attr_accessor :board
     def initialize
         temp_index=0
         @board = Array.new(3) {Array.new(3){temp_index+=1}}
@@ -37,7 +35,6 @@ public
         puts "| #{@board[1][0]} | #{@board[1][1]} | #{@board[1][2]} |"
         puts "+---+---+---+"
         puts "| #{@board[2][0]} | #{@board[2][1]} | #{@board[2][2]} |"
-    
     end
 private
     def get_index(num)
@@ -65,16 +62,19 @@ public
         else puts "Please choose a square that is not yet taken"
         end
     end
-public
+private
     def check_rows_horizontal(board = @board)
         result=""
         board.each do |horizontal_row|
             temp_element = horizontal_row.sample
             result = horizontal_row.all? {|element| element == temp_element}
+            if(result == true)
+                return true
+            end
         end
         return result
     end
-public
+private
     def vertical_to_horizontal
         vertical_horizontal_rows = Array.new(3){Array.new()}
         @board.each_index do |index|
@@ -84,10 +84,45 @@ public
         end
         return vertical_horizontal_rows
     end
-public
-
+private
     def check_rows_vertical
         check_rows_horizontal(vertical_to_horizontal())
+    end
+private
+    def check_single_row(temp_row)
+        temp_sample = temp_row.sample
+        if(temp_row.all?{|element| element == temp_sample})
+            return true
+        else
+            return false
+        end
+    end
+private
+    def check_for_x_top
+        temp_row =[@board[0][0],@board[1][1],@board[2][2]]
+        check_single_row(temp_row)
+    end
+private
+    def check_for_x_bottom
+        temp_row = [@board[2][0],@board[1][1],@board[0][2]]
+        check_single_row(temp_row)
+    end
+private
+    def check_for_cross
+        if(check_for_x_top == true || check_for_x_top == true)
+            return true
+        else
+            return false
+        end
+    end
+public
+    def check_for_win
+        temp_results = [check_for_cross, check_rows_vertical, check_rows_horizontal]
+        if(temp_results.any?(true))
+            return true
+        else 
+            return false
+        end
     end
 end
 
