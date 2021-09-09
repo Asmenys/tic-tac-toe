@@ -15,21 +15,22 @@ class CREATE_PLAYER
 end
 #somehow create the objects, then call assign_symbol on them
 #puts "Enter the name for player 1"
-first_player = CREATE_PLAYER.new("P1")
+    first_player = CREATE_PLAYER.new("P1")
 #puts "Choose a player_symbol to represent you on the board"
-first_player.assign_symbol("Y")
+    first_player.assign_symbol("Y")
 #puts "Enter the name for player 2"
-second_player = CREATE_PLAYER.new("P2")
+    second_player = CREATE_PLAYER.new("P2")
 #puts "Choose a player_symbol to represent you on the board"
-second_player.assign_symbol("X")
+    second_player.assign_symbol("X")
 
 class CREATE_BOARD
+    #remove after testing is over
     attr_accessor :board
     def initialize
         temp_index=0
         @board = Array.new(3) {Array.new(3){temp_index+=1}}
     end
-
+private
     def display_board
         puts "| #{@board[0][0]} | #{@board[0][1]} | #{@board[0][2]} |"   
         puts "+-----------+"
@@ -38,7 +39,7 @@ class CREATE_BOARD
         puts "| #{@board[2][0]} | #{@board[2][1]} | #{@board[2][2]} |"
     
     end
-  private
+private
     def get_index(num)
         temp_index = @board.map {|arr| arr.include?(num)}
         temp_index = temp_index.index(true)
@@ -46,24 +47,27 @@ class CREATE_BOARD
         #[TopArrayIndex,NestedArrayIndex]
         return temp_index
     end
-
-    private
+private
     def check_square(num)
         temp_index = @board.map {|arr| arr.include?(num)}
         return temp_index.any?(true)
     end
-
-public
-    def update_square(player_selection,num)
-unless check_square(num) == false
-        temp_index = get_index(num)
-@board[temp_index[0]][temp_index[1]] = player_selection
-display_board()
-else puts "Please choose a square that is not yet taken"
-end
+private
+    def update_square(player_selection,temp_index)
+        @board[temp_index[0]][temp_index[1]] = player_selection
     end
-
+public
+    def commit_move(player_selection,num)
+        unless check_square(num) == false
+            temp_index = get_index(num)
+            update_square(player_selection,temp_index)
+            display_board()
+        else puts "Please choose a square that is not yet taken"
+        end
+    end
 end
+
+
 game_board = CREATE_BOARD.new
 game_board.display_board
 
