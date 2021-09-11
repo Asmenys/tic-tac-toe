@@ -37,7 +37,7 @@ private
         #[TopArrayIndex,NestedArrayIndex]
         return temp_index
     end
-private
+public
 #This checks whether the users input corresponds to a square
     def check_square(num)
         temp_index = @board.map {|arr| arr.include?(num)}
@@ -48,17 +48,31 @@ private
     def update_square(player_symbol,temp_index)
         @board[temp_index[0]][temp_index[1]] = player_symbol
     end
-public
+private
+    def bad_input
+        puts "Please enter a square that is available on the board"
+    end
+
 #This calls the update_square method with the players input and the corresponding symbol
 #then displays the board unless the players input did not correspond to a proper square
-    def commit_move(player_symbol,num)
-        unless check_square(num) == false
-            temp_index = get_index(num)
+public    
+    def commit_move(player_symbol,player_input)
+        if check_square(player_input) == false
+            bad_input()
+            get_player_input(player_symbol)
+        else
+            temp_index = get_index(player_input)
             update_square(player_symbol,temp_index)
+            
             display_board()
-        else puts "Please choose a square that is not yet taken"
         end
     end
+public
+    def get_player_input(player_symbol)
+        player_input = gets.chomp.to_i
+        commit_move(player_symbol,player_input)
+    end
+
 private
 #checks for a win condition horizontally
     def check_rows_horizontal(board = @board)
@@ -132,6 +146,7 @@ public
     end
 end
 
+
 #creates the players
     puts "Enter the name for player 1"
 player_one = CREATE_PLAYER.new(gets.chomp)
@@ -145,35 +160,36 @@ game_board = CREATE_BOARD.new()
 
 #Number of turns
 turns = 0
-#GAME LOOP
+# GAME LOOP
 while turns<=9
-    game_board.display_board
-    puts "#{player_one.player_name}'s move"
-    #updates the board with players move
-    game_board.commit_move(player_one.player_symbol, gets.chomp.to_i)  
-    #if the current moves amount to a win condition - breaks the loop
-     if (game_board.check_for_win == true)
-        system "clear"
-        game_board.display_board
-        puts "#{player_one.player_name} has WON!"
+    if turns == 9
+        puts "The game has come to a tie"
         break
-     end
-    system "clear"
-   game_board.display_board
-    puts "#{player_two.player_name}'s move"
-         #updates the board with players move
-    game_board.commit_move(player_two.player_symbol, gets.chomp.to_i) 
-      #if the current moves amount to a win condition - breaks the loop
-    if (game_board.check_for_win == true)
-        system "clear"
-        game_board.display_board
-        puts "#{player_two.player_name} has WON!"
-        break
-     end
-    system "clear"
-    game_board.display_board
-    turns+=1
+    end
+game_board.display_board
+
+puts "#{player_one.player_name}'s move"
+game_board.get_player_input(player_one.player_symbol)
+if game_board.check_for_win == true
+    puts "#{player_one.player_name} has won the game!"
+    break
+end
+turns+=1
+if turns == 9
+    puts "The game has come to a tie"
+    break
 end
 
+puts "#{player_two.player_name}'s move"
+game_board.get_player_input(player_two.player_symbol)
+if game_board.check_for_win == true
+    puts "#{player_two.player_name} has won the game!"
+    break
+end
+turns+=1
+if turns == 9
+    puts "The game has come to a tie"
+    break
+end
 
-
+end
